@@ -27,19 +27,22 @@ if ("geolocation" in navigator) {
 		//do_something(position.coords.latitude, position.coords.longitude);
 		var longi = position.coords.longitude;
 		var lat = position.coords.latitude;
-		var lansu = longi.substr(0,6);
-		var latsu = lat.substr(0,6);
-		
+		var location;
 		$.get("http://maps.googleapis.com/maps/api/geocode/json?latlng=" + lat + "," + longi +"&sensor=false", function(data)
 		{
 			x.innerHTML = data.results[0].address_components[2].long_name;
-			var location = data.results[0].address_components[2].long_name;
+			location = data.results[0].address_components[2].long_name;
 			document.getElementById('loc').value = location; 
 		});
 		
-		$.get("https://api.forecast.io/forecast/06446ae7099feacb17ffef78fdf89f0a/" + latsu + "," + lansu, function(data)
+		$.get("weather/Rhyl.json", function(data)
 		{
-			x.innerHTML = data.weather[0].description;
+			
+		}).fail(function()
+		{
+			// if file doesn't exist do curl request
+			$.POST("getWeather.php", {data: 1, location: location}, function(data){alert(data)});
+			
 		});
 	});
 } else {
