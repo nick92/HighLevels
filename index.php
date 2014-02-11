@@ -11,15 +11,15 @@
 	
 	function get_user_info()
 	{
-		$userInfo = mysql_query("select * from users where name = 'nick'");	
+		/*$userInfo = mysql_query("select * from users where name = 'nick'");	
 		
 		while($row = mysql_fetch_array($userInfo))
 		{
 			$stat_array = explode(",",$row[0]);
 			print_r($row[rivers]);
 		}
-		
-		/*
+		*/
+		$stat_array = [4093, 4089];
 		foreach($stat_array as $sID)
 		{	
 			$site = "http://www.environment-agency.gov.uk/homeandleisure/floods/riverlevels/120766.aspx?stationId=$sID";
@@ -27,7 +27,7 @@
 			$scraped_data = scrape_between($scraped_website, '<div class="chart-top"><h3>Current level: ', "</h3>");
 			echo $scraped_data;
 			unset($sID);
-		}*/
+		}
 	}
 	
 	function curl($url)
