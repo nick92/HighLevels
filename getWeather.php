@@ -1,4 +1,6 @@
 <?php
+$location = $_POST['loc'];
+$longlat = $_POST['lonlat'];
 
 	function curl($url)
 	{
@@ -25,7 +27,7 @@
 		$file = "weather/" . $location . ".json";
 		$put = file_put_contents($file, $data);
 	}
-	$data = curl("https://api.forecast.io/forecast/06446ae7099feacb17ffef78fdf89f0a/37.8267,-122.423");
-	create_json("Rhyl", $data);
+	$data = curl("https://api.forecast.io/forecast/06446ae7099feacb17ffef78fdf89f0a/$longlat");
+	create_json($location, $data);
 
 ?>

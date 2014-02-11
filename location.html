@@ -30,18 +30,18 @@ if ("geolocation" in navigator) {
 		var location;
 		$.get("http://maps.googleapis.com/maps/api/geocode/json?latlng=" + lat + "," + longi +"&sensor=false", function(data)
 		{
-			x.innerHTML = data.results[0].address_components[2].long_name;
+			x.innerHTML = data.results[0].address_components[4].long_name;
 			location = data.results[0].address_components[2].long_name;
 			document.getElementById('loc').value = location; 
 		});
-		
-		$.get("weather/Rhyl.json", function(data)
+		location = x;
+		$.get("weather/"+location+".json", function(data)
 		{
 			
 		}).fail(function()
 		{
 			// if file doesn't exist do curl request
-			$.POST("getWeather.php", {data: 1, location: location}, function(data){alert(data)});
+			$.POST("getWeather.php", {loc: location, lonlat: longi +","+ lat}, function(data){alert(data)});
 			
 		});
 	});
