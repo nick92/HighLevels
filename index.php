@@ -9,27 +9,6 @@
 	$selected = mysql_select_db("highlevels",$mysql) or die("Could not select examples");
 	get_user_info();
 	
-	function get_user_info()
-	{
-		$userInfo = mysql_query("select * from users where name = 'nick'");	
-		
-		while($row = mysql_fetch_array($userInfo))
-		{
-			$stat_array = explode(",",$row[0]);
-			print_r($row[rivers]);
-		}
-		
-		/*
-		foreach($stat_array as $sID)
-		{	
-			$site = "http://www.environment-agency.gov.uk/homeandleisure/floods/riverlevels/120766.aspx?stationId=$sID";
-			$scraped_website = curl($site);
-			$scraped_data = scrape_between($scraped_website, '<div class="chart-top"><h3>Current level: ', "</h3>");
-			echo $scraped_data;
-			unset($sID);
-		}*/
-	}
-	
 	function curl($url)
 	{
 		$options = Array(
@@ -48,6 +27,24 @@
 		$data = curl_exec($ch);
 		curl_close($ch);
 		return $data;
+	}
+	
+	function get_user_info()
+	{
+		$userInfo = mysql_query("select * from users where name = 'nick'");	
+		
+		$row = mysql_fetch_array($userInfo);
+		
+		$stat_array = explode(",",$row[2]);
+		
+		foreach($stat_array as $sID)
+		{	
+			$site = "http://www.environment-agency.gov.uk/homeandleisure/floods/riverlevels/120766.aspx?stationId=$sID";
+			$scraped_website = curl($site);
+			$scraped_data = scrape_between($scraped_website, '<div class="chart-top"><h3>Current level: ', "</h3>");
+			echo $scraped_data;
+			unset($sID);
+		}
 	}
 	
 	function scrape_between($data, $start, $end)
