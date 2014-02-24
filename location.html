@@ -1,53 +1,80 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
-<title>Insert title here</title>
-</head>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
+		<title>You Insert title here!</title>
+	</head>
 <body>
-<div id="demo"></div>
-<form name="log_in" action="functions.php" method="post">
-Username: <input type="text" name="user">
-Password: <input type="password" name="pass">
-<input type="submit" value="Submit">
-</form> 
-<form name="register" action="functions.php" method="post">
-Username: <input type="text" name="user">
-Password: <input type="password" name="pass">
-<input type="text" name="location" value="" id="loc">
-<input type="submit" value="Submit">
-</form> 
-<script>
-	
-var x = document.getElementById("demo");
+	<div id="location"></div>
+	<div id="weather"></div>
+	<div id="future"></div>
+	<form name="log_in" action="functions.php" method="post">
+		Username: <input type="text" name="user">
+		Password: <input type="password" name="pass">
+		<input type="submit" value="Submit">
+	</form> 
+	<form name="register" action="functions.php" method="post">
+		Username: <input type="text" name="user">
+		Password: <input type="password" name="pass">
+		<input type="text" name="location" value="" id="loc">
+		<input type="submit" value="Submit">
+	</form> 
+	<script>
+			
+		var x = document.getElementById("location");
+		var w = document.getElementById("weather");
+		var f = document.getElementById("future");
 
-if ("geolocation" in navigator) {
-	navigator.geolocation.getCurrentPosition(function(position) {
-		//do_something(position.coords.latitude, position.coords.longitude);
-		var longi = position.coords.longitude;
-		var lat = position.coords.latitude;
-		var location;
-		$.get("http://maps.googleapis.com/maps/api/geocode/json?latlng=" + lat + "," + longi +"&sensor=false", function(data)
-		{
-			x.innerHTML = data.results[0].address_components[4].long_name;
-			location = data.results[0].address_components[2].long_name;
-			document.getElementById('loc').value = location; 
-		});
-		location = x;
-		$.get("weather/"+location+".json", function(data)
-		{
-			
-		}).fail(function()
-		{
-			// if file doesn't exist do curl request
-			$.POST("getWeather.php", {loc: location, lonlat: longi +","+ lat}, function(data){alert(data)});
-			
-		});
-	});
-} else {
-  		x.innerHTML = "Geolocation not found";
-}
-</script>
+		if ("geolocation" in navigator) {
+			navigator.geolocation.getCurrentPosition(function(position) {
+				var longi = position.coords.longitude;
+				var lat = position.coords.latitude;
+				var location;
+				
+				$.get("http://maps.googleapis.com/maps/api/geocode/json?latlng=" + lat + "," + longi +"&sensor=false", function(data)
+				{
+					x.innerHTML = data.results[0].address_components[7].long_name;
+					location = data.results[0].address_components[7].long_name;
+					document.getElementById('loc').value = location; 			
+					
+					/*$.post("getWeather.php", {check:true, loc: location, lonlat: longi +","+ lat},function(data)
+					{
+						alert(data);
+					});*/
+				
+					$.get("weather/"+location+".json", function(data)
+					{
+						//Current Weather Info
+						w.innerHTML = data.currently.summary;
+						var time = data.currently.time + 21600000;
+						var date = new Date(time*1000);
+						var now = new Date().getTime();
+						var aTime = "HH:"+date.getHours()+" MM:"+date.getMinutes()+" SS:"+date.getSeconds();;
+						
+						//Future Weather Info
+						var weathers = [1,2,3];
+						
+						//Going to display data from json for the day.	
+						for(var i = 0; i < 48; i++)
+						{
+							f.innerHTML = data.hourly.summary;
+							var ftime = data.hourly.data[0].time;
+							var fdate = new Date(ftime*1000);
+							var fTime = "HH:"+fdate.getHours()+" MM:"+fdate.getMinutes()+" SS:"+fdate.getSeconds();;
+							//ft.innerHTML = fTime;	
+						}
+					}).fail(function()
+					{
+						// if file doesn't exist do curl request
+						$.post("getWeather.php", {loc: location, lonlat: longi +","+ lat}, function(data){alert(data)});
+						
+					});
+				});
+			});
+		} else {
+				x.innerHTML = "Geolocation not found";
+		}
+	</script>
 </body>
 </html>

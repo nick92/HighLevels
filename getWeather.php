@@ -1,6 +1,7 @@
 <?php
 $location = $_POST['loc'];
 $longlat = $_POST['lonlat'];
+$check = $_POST['check'];
 
 	function curl($url)
 	{
@@ -27,7 +28,27 @@ $longlat = $_POST['lonlat'];
 		$file = "weather/" . $location . ".json";
 		$put = file_put_contents($file, $data);
 	}
-	$data = curl("https://api.forecast.io/forecast/06446ae7099feacb17ffef78fdf89f0a/$longlat");
-	create_json($location, $data);
+	
+	if($check == true)
+	{
+		$timeNow = time();
 
+		$get = file_get_contents("weather/" . $location . ".json");
+		$json = json_decode($get);
+		$fileTime = $json->{'currently'}->{'time'};
+
+		if($timeNow > $fileTime)
+		{
+			$data = curl("https://api.forecast.io/forecast/06446ae7099feacb17ffef78fdf89f0a/$longlat");	
+			create_json($location, $data);
+			echo "updated";
+		}
+		else
+			echo "not updated";
+	}
+	else
+	{
+		$data = curl("https://api.forecast.io/forecast/06446ae7099feacb17ffef78fdf89f0a/$longlat");
+		create_json($location, $data);
+	}
 ?>
