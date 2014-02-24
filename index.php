@@ -7,9 +7,10 @@
 	}
 	
 	$selected = mysql_select_db("highlevels",$mysql) or die("Could not select examples");
-	get_user_info();
 	
-	function get_user_info()
+	get_json();
+	
+	function get_river_level()
 	{
 		$userInfo = mysql_query("select * from users where name = 'nick'");	
 		
@@ -54,6 +55,30 @@
 		$stop = stripos($data, $end);
 		$data = substr($data, 0, $stop);
 		return $data;
+	}
+	
+	function get_json()
+	{
+		//Connect to DB to get user location
+		$userQu = mysql_query("select location from users where name = 'nick'");	
+		$userLoc = mysql_fetch_array($userQu);
+		var_dump($userLoc[0]);
+		
+		//connect to DB and get river COORDS
+		$riverQu = mysql_query("select longlat from rivers where stationID = '4152'");	
+		$row = mysql_fetch_array($riverQu);
+		var_dump($row[0]);
+		
+		//request data from google api
+		$request = "http://maps.googleapis.com/maps/api/distancematrix/json?origins=$userLoc[0]&destinations=$row[0]&sensor=false";
+		$scrapped_data = curl($request);
+		$json_data = json_decode($scrapped_data);
+		
+		foreach($json_data->rows as $rows)
+		{
+			var_dump($rows->elements[0]->distance->text);
+			
+		}		
 	}
 	mysql_close($mysql);
 ?>

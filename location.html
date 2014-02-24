@@ -6,6 +6,7 @@
 		<title>You Insert title here!</title>
 	</head>
 <body>
+<<<<<<< HEAD
 	<div id="location"></div>
 	<div id="weather"></div>
 	<div id="future"></div>
@@ -76,5 +77,47 @@
 				x.innerHTML = "Geolocation not found";
 		}
 	</script>
+=======
+<div id="demo"></div>
+<form name="log_in" action="functions.php" method="post">
+Username: <input type="text" name="user">
+Password: <input type="password" name="pass">
+<input type="submit" value="Submit">
+</form> 
+<form name="register" action="functions.php" method="post">
+Username: <input type="text" name="user">
+Password: <input type="password" name="pass">
+<input type="text" name="location" value="" id="loc">
+<input type="submit" value="Submit">
+</form> 
+<script>
+	
+var x = document.getElementById("demo");
+
+if ("geolocation" in navigator) {
+	navigator.geolocation.getCurrentPosition(function(position) {
+		//do_something(position.coords.latitude, position.coords.longitude);
+		var longi = position.coords.longitude;
+		var lat = position.coords.latitude;
+		var lansu = longi.substr(0,6);
+		var latsu = lat.substr(0,6);
+		
+		$.get("http://maps.googleapis.com/maps/api/geocode/json?latlng=" + lat + "," + longi +"&sensor=false", function(data)
+		{
+			x.innerHTML = data.results[0].address_components[2].long_name;
+			var location = data.results[0].address_components[2].long_name;
+			document.getElementById('loc').value = location; 
+		});
+		
+		$.get("https://api.forecast.io/forecast/06446ae7099feacb17ffef78fdf89f0a/" + latsu + "," + lansu, function(data)
+		{
+			x.innerHTML = data.weather[0].description;
+		});
+	});
+} else {
+  		x.innerHTML = "Geolocation not found";
+}
+</script>
+>>>>>>> 26057e35797205fb942cc8b9caae826f6aa9bdd2
 </body>
 </html>
