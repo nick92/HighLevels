@@ -1,4 +1,21 @@
 <?php
+$data = $_REQUEST['data'];
+
+switch ($data)
+{
+	case 0:
+		log_in();
+		break;
+	case 1:
+		//create_user(pass some things);
+		break;
+	case 2:
+		//delete_user(pass more);
+		break;
+	case 3: 
+		//ammend(pass stuff
+		break;	
+}
 function connect()
 {
 	$mysql = mysql_connect('localhost', 'root', 'hydref');
