@@ -7,12 +7,12 @@
 	}
 	
 	$selected = mysql_select_db("highlevels",$mysql) or die("Could not select examples");
-	
+	$rivers = explode(",",mysql_fetch_array(mysql_query("select rivers from users where name = 'nick'"))[0]);
 	get_json();
 	
 	function get_river_level()
 	{
-		$userInfo = mysql_query("select * from users where name = 'nick'");	
+		$userInfo = mysql_query("select rivers from users where name = 'nick'");	
 		
 		$row = mysql_fetch_array($userInfo);
 		
@@ -62,22 +62,39 @@
 		//Connect to DB to get user location
 		$userQu = mysql_query("select location from users where name = 'nick'");	
 		$userLoc = mysql_fetch_array($userQu);
-		var_dump($userLoc[0]);
-		
-		//connect to DB and get river COORDS
-		$riverQu = mysql_query("select longlat from rivers where stationID = '4152'");	
-		$row = mysql_fetch_array($riverQu);
-		var_dump($row[0]);
+		$rivers = $GLOBALS['rivers'];
+		$addedRiv = '';
+		foreach($rivers as $river)
+		{
+			//connect to DB and get river COORDS
+			$riverQu = mysql_query("select longlat from rivers where stationID = '$river'");	
+			$rivArray = mysql_fetch_array($riverQu);
+			
+			$addedRiv .=  $rivArray[0] . "|";
+		}
 		
 		//request data from google api
-		$request = "http://maps.googleapis.com/maps/api/distancematrix/json?origins=$userLoc[0]&destinations=$row[0]&sensor=false";
+		$request = "http://maps.googleapis.com/maps/api/distancematrix/json?origins=$userLoc[0]&destinations=$addedRiv&sensor=false";
 		$scrapped_data = curl($request);
 		$json_data = json_decode($scrapped_data);
 		
 		foreach($json_data->rows as $rows)
 		{
-			var_dump($rows->elements[0]->distance->text);
-			
+			foreach($rows->elements as $data)
+			{
+				$distance = $data->distance->text;
+				var_dump($distance);
+				
+				/*
+				if($distance[0] < $distance[1])
+				{
+					echo "N1 closer";
+				}
+				else
+				{
+					echo "N2 closer";
+				}*/
+			}
 		}		
 	}
 	mysql_close($mysql);
