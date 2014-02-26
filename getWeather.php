@@ -1,5 +1,5 @@
 <?php
-$location = $_POST['loc'];
+$location = "weather";
 $longlat = $_POST['lonlat'];
 $check = $_POST['check'];
 
@@ -26,17 +26,18 @@ $check = $_POST['check'];
 	function create_json($location, $data)
 	{
 		$file = "weather/" . $location . ".json";
-		$put = file_put_contents($file, $data);
+		$put = file_put_contents($file, $data) or die ("Couldn't insert text"); 
 	}
 	
 	if($check == true)
 	{
 		$timeNow = time();
 
-		$get = file_get_contents($location . ".json");
+		$get = file_get_contents("weather/" . $location . ".json");
 		$json = json_decode($get);
-		$fileTime = $json->{'currently'}->{'time'};
-
+		$fileTime = $json->{'currently'}->{'time'} + 7200000;
+		$fileLoc = $json->{'latitude'} . "," .$json->{'longitude'};
+		
 		if($timeNow > $fileTime)
 		{
 			$data = curl("https://api.forecast.io/forecast/06446ae7099feacb17ffef78fdf89f0a/$longlat");	
