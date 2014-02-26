@@ -9,16 +9,12 @@
 	$selected = mysql_select_db("highlevels",$mysql) or die("Could not select examples");
 	$rivers = explode(",",mysql_fetch_array(mysql_query("select rivers from users where name = 'nick'"))[0]);
 	get_json();
+	get_river_level();
 	
 	function get_river_level()
-	{
-		$userInfo = mysql_query("select rivers from users where name = 'nick'");	
-		
-		$row = mysql_fetch_array($userInfo);
-		
-		$stat_array = explode(",",$row[2]);		
-		
-		foreach($stat_array as $sID)
+	{	
+		$rivers = $GLOBALS['rivers']; 
+		foreach($rivers as $sID)
 		{	
 			$site = "http://www.environment-agency.gov.uk/homeandleisure/floods/riverlevels/120766.aspx?stationId=$sID";
 			$scraped_website = curl($site);

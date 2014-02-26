@@ -33,7 +33,7 @@ $check = $_POST['check'];
 	{
 		$timeNow = time();
 
-		$get = file_get_contents("weather/" . $location . ".json");
+		$get = file_get_contents($location . ".json");
 		$json = json_decode($get);
 		$fileTime = $json->{'currently'}->{'time'};
 
