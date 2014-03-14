@@ -8,23 +8,14 @@
 <body>
 	<div id="location"></div>
 	<div id="weather"></div>
-	<div id="future"></div>
-	<form name="log_in" action="functions.php" method="post">
-		Username: <input type="text" name="user">
-		Password: <input type="password" name="pass">
-		<input type="submit" value="Submit">
-	</form> 
-	<form name="register" action="functions.php" method="post">
-		Username: <input type="text" name="user">
-		Password: <input type="password" name="pass">
-		<input type="text" name="location" value="" id="loc">
-		<input type="submit" value="Submit">
-	</form> 
+	<div id="hourly"></div>
+	<div id="daily"></div>
 	<script>
 			
 		var x = document.getElementById("location");
 		var w = document.getElementById("weather");
-		var f = document.getElementById("future");
+		var f = document.getElementById("hourly");
+		var d = document.getElementById("daily");
 
 		//check the geolocation API is available
 		if ("geolocation" in navigator) {
@@ -37,26 +28,26 @@
 				{
 					//display location
 					x.innerHTML = data.results[0].address_components[7].long_name;
-					location = data.results[0].address_components[7].long_name;
-					document.getElementById('loc').value = location; 			
+					location = data.results[0].address_components[7].long_name; 			
 					
 					//Get weather file
 					$.get("weather/weather.json", function(data)
 					{
 						//Current Weather Info
 						w.innerHTML = data.currently.summary;
-
+						f.innerHTML = data.hourly.summary;
+						d.innerHTML = data.daily.summary;
 						//Future Weather Info
 						var weathers = [1,2,3];
 						
-						//Going to display data from json for the day.	
+						/*Going to display data from json for the day.	
 						for(var i = 0; i < 48; i++)
 						{
 							f.innerHTML = data.hourly.summary;
 							var ftime = data.hourly.data[0].time;
 							var fdate = new Date(ftime*1000);
 							var fTime = "HH:"+fdate.getHours()+" MM:"+fdate.getMinutes()+" SS:"+fdate.getSeconds();
-						}
+						}*/
 						$.post("getWeather.php", {check:true, lonlat: lat + "," + longi}, function(data){});
 					}).fail(function()
 					{
@@ -74,38 +65,6 @@
 		} else {
 				x.innerHTML = "Geolocation not found";
 		}
-	</script>
-	<script>			
-		/*var x = document.getElementById("demo");
-
-		if ("geolocation" in navigator) {
-			navigator.geolocation.getCurrentPosition(function(position) {
-				var longi = position.coords.longitude;
-				var lat = position.coords.latitude;
-				var lansu = longi.substr(0,6);
-				var latsu = lat.substr(0,6);
-				
-				// Time stuff 
-				var time = data.currently.time + 21600000;
-				var date = new Date(time*1000);
-				var now = new Date().getTime();
-				var aTime = "HH:"+date.getHours()+" MM:"+date.getMinutes()+" SS:"+date.getSeconds();;
-						
-				$.get("http://maps.googleapis.com/maps/api/geocode/json?latlng=" + lat + "," + longi +"&sensor=false", function(data)
-				{
-					x.innerHTML = data.results[0].address_components[2].long_name;
-					var location = data.results[0].address_components[2].long_name;
-					document.getElementById('loc').value = location; 
-				});
-				/*
-				$.get("https://api.forecast.io/forecast/06446ae7099feacb17ffef78fdf89f0a/" + latsu + "," + lansu, function(data)
-				{
-					x.innerHTML = data.weather[0].description;
-				});
-			});
-		} else {
-				x.innerHTML = "Geolocation not found";
-		}*/
 	</script>
 	</body>
 </html>

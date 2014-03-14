@@ -35,9 +35,9 @@ $check = $_POST['check'];
 
 		$get = file_get_contents("weather/" . $location . ".json");
 		$json = json_decode($get);
-		$fileTime = $json->{'currently'}->{'time'} + 7200000;
+		$fileTime = $json->{'currently'}->{'time'} + 7200;
 		$fileLoc = $json->{'latitude'} . "," .$json->{'longitude'};
-		
+		echo $timeNow . "," . $fileTime;
 		if($timeNow > $fileTime)
 		{
 			$data = curl("https://api.forecast.io/forecast/06446ae7099feacb17ffef78fdf89f0a/$longlat");	

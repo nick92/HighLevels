@@ -1,38 +1,39 @@
 <?php
-$data = $_REQUEST['data'];
+ob_start();
+$data = $_POST['data'];
+$user = $_POST['user'];
+$pass = $_POST['pass'];
+$loc =  $_POST['location'];
+
+$mysql = mysql_connect('localhost', 'root', 'hydref');
+if (!$mysql) 
+{
+	die('Could not connect: ' . mysql_error());
+}
+	
+$selected = mysql_select_db("highlevels",$mysql) or die("Could not select examples");
 
 switch ($data)
 {
 	case 0:
-		log_in();
+		log_in($user, $pass);
 		break;
 	case 1:
-		//create_user(pass some things);
+		create_user($user,$pass,$loc);
 		break;
-	case 2:
+	case '2':
 		//delete_user(pass more);
 		break;
-	case 3: 
-		//ammend(pass stuff
+	case '3': 
+		//ammend(pass stuff in here!);
 		break;	
+	case 4: 
+		get_rivers();
+		break;
 }
-function connect()
+
+function log_in($user, $pass)
 {
-	$mysql = mysql_connect('localhost', 'root', 'hydref');
-	if (!$mysql) 
-	{
-		die('Could not connect: ' . mysql_error());
-	}
-		
-	$selected = mysql_select_db("highlevels",$mysql) or die("Could not select examples");
-}
-function log_in()
-{
-	connect();
-	$user = $_POST['user'];
-	$pass = $_POST['pass'];
-	
-	echo $user.$info;
 	$userInfo = mysql_query("select * from users where name = '$user'");
 	
 	while($row = mysql_fetch_array($userInfo))
@@ -44,20 +45,28 @@ function log_in()
 		else
 		{
 			echo "Logged in!";
+			header("Location: index.html");
+			Exit;
 		}
 	}	
-	
-	mysql_close($mysql);
 }
-function create_user($userID, $pass, $location)
+
+function get_rivers()
 {
-	connect();
+	$rivStr ="";
+	$rivers = mysql_query("select name from rivers");
 	
-	$createUser = mysql_query("insert into users (name, password, rivers, location) values ('$userID', '$pass', null, '$location')");
+	while($row = mysql_fetch_array($rivers))
+	{
+		echo $row[0] . ",";
+	}	
+}
 	
-	echo $createUser;
+function create_user($userID, $pass, $location)
+{	
+	$createUser = mysql_query("insert into users (name, password, rivers, location) values ('$userID', '$pass', null, '$location')") or die("Couldn't submit");
 	
-	mysql_close($mysql);
+	echo "User Created";
 }
 function delete_user($userID)
 {
@@ -88,4 +97,4 @@ function ammend($userID, $item, $record)
 	
 	mysql_close($mysql);
 }
-create_user($_POST['user'], $_POST['pass'], $_POST['location']);
+mysql_close($mysql);
