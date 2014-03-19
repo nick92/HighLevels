@@ -40,7 +40,7 @@ $check = $_POST['check'];
 		echo $timeNow . "," . $fileTime;
 		if($timeNow > $fileTime)
 		{
-			$data = curl("https://api.forecast.io/forecast/06446ae7099feacb17ffef78fdf89f0a/$longlat");	
+			$data = curl("https://api.forecast.io/forecast/06446ae7099feacb17ffef78fdf89f0a/$longlat?units=si");	
 			create_json($location, $data);
 			echo "updated";
 		}
@@ -49,7 +49,7 @@ $check = $_POST['check'];
 	}
 	else
 	{
-		$data = curl("https://api.forecast.io/forecast/06446ae7099feacb17ffef78fdf89f0a/$longlat");
+		$data = curl("https://api.forecast.io/forecast/06446ae7099feacb17ffef78fdf89f0a/$longlat?units=si");
 		create_json($location, $data);
 	}
 ?>

@@ -34,7 +34,7 @@
 					longlat = data.results[0].geometry.location.lat + "," + data.results[0].geometry.location.lng;
 					document.getElementById('longlat').value = longlat;
 					//display location	
-					location = data.results[0].address_components[7].long_name; 
+					location = data.results[0].address_components[3].long_name; 
 					document.getElementById('loc').value = location;
 				});
 			});

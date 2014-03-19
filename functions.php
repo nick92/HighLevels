@@ -24,8 +24,8 @@ switch ($data)
 	case '2':
 		//delete_user(pass more);
 		break;
-	case '3': 
-		//ammend(pass stuff in here!);
+	case 3: 
+		getInfo();
 		break;	
 	case 4: 
 		get_rivers();
@@ -44,6 +44,8 @@ function log_in($user, $pass)
 		}
 		else
 		{
+			setcookie("user", $user, time()+60*60*24*30);
+			setcookie("longlat", $row[3], time()+60*60*24*30);
 			echo "Logged in!";
 			header("Location: index.html");
 			Exit;
@@ -66,7 +68,8 @@ function create_user($userID, $pass, $location)
 {	
 	$createUser = mysql_query("insert into users (name, password, rivers, location) values ('$userID', '$pass', null, '$location')") or die("Couldn't submit");
 	
-	echo "User Created";
+	header("Location: index.html");
+	Exit;
 }
 function delete_user($userID)
 {

@@ -3,13 +3,13 @@
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<link rel="stylesheet" type="text/css" href="style.css"> 
-		<script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
-		<title>You Insert title here!</title>
+		<link href='http://fonts.googleapis.com/css?family=Poiret+One' rel='stylesheet' type='text/css'>
+		<title>High Levels - The home of river levels in the UK</title>
 	</head>
-	<body>
+	<body onload="run()">
 		<h1 id="hl">High Levels</h1>
 		<h3 id="title">The home of river levels in the UK</h3> 			
-		
+		<p id="user"></p>
 		<div id="weather-box">
 			<div id="icon"></div>
 			<div id="location"></div>
@@ -18,18 +18,19 @@
 			<div id="time"></div>
 			<div id="daily"></div>
 		</div>
-		
+		<h3 id="nearYou" class="riverLevels">River Levels Near You</h3>
 		<div id="favriv">
-			<div class="rivBox">
-				<div id="rName"></div>
-				<div id="rLevel"></div>
-				<div id="rDist"></div>			
-			</div>
+			
 		</div>
+		<h3 id="favorite" class="riverLevels" style="margin-top:80px;">Favorite Rivers</h3>
+		<div id="favriv">
+			
+		</div>
+		
 		<div id="search-gr">
 			<form action="" id="search-form">
 				<fieldset>
-					<input type="text" id="search" name="search" />
+					<input type="search" id="search" name="search" />
 					<input type="submit" id="search-submit" value="Sub" />
 				</fieldset>
 			</form>
@@ -37,8 +38,12 @@
 				
 			</table>
 		</div>
-		<script>			
-					
+		
+		
+		
+		<script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
+		<script src="riverinfo.js"></script>
+		<script>
 			$(document).ready(function(){ 
 				var rivArr;
 				// Add the value of "Search..." to the input field and a class of .empty
@@ -52,22 +57,11 @@
 				// When you click on #search
 				$("#search").focus(function(){
 					var i = 0;
+					
 					//search for river names based on key
 					$("#search").keypress(function(data){
 						var key = data.key;
-						
-						$(rivArr).each(function(index){
-							var river = rivArr[index];
-							
-							if(river !== undefined)
-							{
-								if(key !== river[i])
-								{
-									rivArr.splice(index, 1);
-								}
-							}
-							$("#results").append("<tr><td><p>"+river+"</p></td></tr>");
-						});
+						var river = rivArr[0];
 						
 						if(key == "Backspace")
 						{
@@ -80,8 +74,26 @@
 						{
 							i++;
 						}
-						console.log(rivArr);
-						console.log(i);
+						
+						$(rivArr).each(function(index){
+							var river = rivArr[index];
+							var reg = new RegExp(key);
+							
+							if(river !== undefined)
+							{
+								var test = reg.test();
+								console.log(test);
+								console.log(rivArr);
+								console.log(i);
+								/*
+								if(key !== river[i])
+								{
+									rivArr.splice(index, 1);
+								}*/
+							}
+						
+						});
+						
 					});
 					// If the value is equal to "Search..."
 					if($(this).val() == "Search...") {
@@ -100,76 +112,6 @@
 					}					
 				});
 			});
-			
-			var x = document.getElementById("location");
-			var w = document.getElementById("weather");
-			var f = document.getElementById("hourly");
-			var d = document.getElementById("daily");
-			var icon = document.getElementById("icon");
-			var time = document.getElementById("time");
-			
-			//check the geolocation API is available
-			if ("geolocation" in navigator) {
-				navigator.geolocation.getCurrentPosition(function(position) {
-					var longi = position.coords.longitude;
-					var lat = position.coords.latitude;
-					var location;
-					//Get users location JSON file from Google
-					$.get("http://maps.googleapis.com/maps/api/geocode/json?latlng=" + lat + "," + longi +"&sensor=false", function(data)
-					{
-						//display location
-						//x.innerHTML = "Your current location is: "+data.results[0].address_components[1].long_name;
-						location = data.results[0].address_components[1].long_name; 			
-						
-						//Get weather file
-						$.get("weather/weather.json?nocache="+Math.random(), function(data)
-						{
-							//Current Weather Info
-							w.innerHTML = "Weather: " + data.currently.summary;
-							f.innerHTML = "Temp: "+data.currently.temperature +"&deg;f";
-							d.innerHTML = "Percip: " + data.currently.precipIntensity;
-							icon.innerHTML = "<img src='icon/sun.rays.cloud.png' />";
-							/*Time data was received
-							var ftime = data.currently.time;
-							var fdate = new Date(ftime*1000);
-							var fTime = "HH:"+fdate.getHours()+" MM:"+fdate.getMinutes()+" SS:"+fdate.getSeconds();
-						    time.innerHTML = fTime;*/
-							//Check if weather file needs to be updated
-							$.post("getWeather.php", {check:true, lonlat: lat + "," + longi}, function(data){});
-						}).fail(function()
-						{
-							// if file doesn't exist do curl request
-							$.post("getWeather.php", {check:false, lonlat: lat + "," + longi}, function(data){
-								//Then get the json file to display weather						
-								$.get("weather/weather.json", function(data){
-									//Current Weather Info
-									w.innerHTML = data.currently.summary;
-								});
-							});
-						});
-					});
-					
-					//-----------------Get River Info!!-----------------
-					var name = document.getElementById("rName");
-					var level = document.getElementById("rLevel");
-					var dist = document.getElementById("rDist");
-					
-					$.getJSON("river.php", function(data)
-					{
-						$(data).each(function(index){
-							name.innerHTML = data[0].name;
-							level.innerHTML = data[0].level;
-							dist.innerHTML = data[0].distance;
-						});
-					});
-				
-				}).fail(function()
-				{
-					alert("fail");	
-				});
-			} else {
-					x.innerHTML = "Geolocation not found";
-			}		
 		</script>
 	</body>
 </html>

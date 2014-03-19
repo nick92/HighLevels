@@ -8,14 +8,14 @@ fieldset { border: none }
 
 body	{ background:url("images/background2.jpg") top right no-repeat; background-position:fixed; }
 #hl { color: #00514f; font-family:"Lucida Calligraphy"; font-size: 38px; margin: 10px; opacity: 0.9;}
-#title { font-family: Myriad Pro; color: #2b2b2b; font-size: 16px; font-style: normal; margin-left: 60px; opacity: 0.8}
+#title { font-family: 'Poiret One'; color: #2b2b2b; font-size: 18px; font-style: normal; margin-left: 80px; opacity: 0.8}
 #search-gr { position: absolute; top: 10px; right: 20px; }
 #search { margin: 1px; }
 #weather-box 
 { 	
 	position: absolute; 
 	top: 80px; 
-	right: 25px; 
+	right: 50px; 
 	padding: 10px;
 	opacity: 0.8;
 	border-radius: 2px;
@@ -43,15 +43,69 @@ body	{ background:url("images/background2.jpg") top right no-repeat; background-
 	padding: 10px;
 	background-color: #E6E6E6;
 	opacity: 0.7;
+	overflow: hidden;
    //box-shadow:         inset 0 0 10px #000000; 
 }
 .rivBox
 {
+	position: absolute;
 	height: 80%;
 	width: 140px;
 	text-align: right;
-	margin-left: 10px;
+	top: 5px;
 	padding: 5px;
 	background-color: #FFFFFF;
-   //box-shadow:         inset 0 0 10px #CFCFCF; 
+   background-position:5px 5px;
+   background-repeat:no-repeat;
+   border:1px solid #CCC;
+   display:block;
+   height:100px;
+   padding:5px;
+   white-space:nowrap; 
+   cursor: pointer;
 }   
+.rivBox:hover
+{
+	opacity: 1;
+}
+.riverLevels
+{
+	position: relative;
+   top: 145px;
+   font-family: 'Poiret One'; 
+   color: #2b2b2b; 
+   font-size: 16px; 
+   left: 51px;
+   width: 200px;
+}
+#user
+{
+	font-size: 12px;
+   opacity: 0.6;
+   position: absolute;
+   right: 346px;
+   top: 15px;
+}
+.rBox
+{
+	 background: none repeat scroll 0 0 #008000;
+    bottom: 20px;
+    height: 57px;
+    left: 27px;
+    position: absolute;
+    width: 25px;
+	-webkit-transition:height 2s;   
+}
+#rLine
+{
+	width: 55px;
+	height: 1px;
+	background-color: #3399FF;
+	position: absolute;
+	left: 12px;
+	bottom: 21px; 	
+}
+
+input[type=search] { 
+	             
+}

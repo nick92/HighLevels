@@ -9,7 +9,13 @@
 	}
 	
 	$selected = mysql_select_db("highlevels",$mysql) or die("Could not select examples");
-	$rivers = explode(",",mysql_fetch_array(mysql_query("select rivers from users where name = 'nick'"))[0]);
+	$favrivers = explode(",",mysql_fetch_array(mysql_query("select rivers from users where name = 'nick'"))[0]);
+	$river = mysql_query("select stationID from rivers");
+	
+	while($row = mysql_fetch_array($river))
+	{
+		$rivers[] = $row[0];
+	}	
 
 	get_json();
 	
@@ -96,7 +102,10 @@
 				$riverJson['name'] = $myArr[$j++];
 				$riverJson['level'] = $myArr[$j++];
 				$riverJson['distance'] = $distance;
+				$riverJson['fav'] = '0';
+				
 				array_push($jsonArr, $riverJson);
+				
 			}
 		}
 		echo json_encode($jsonArr);
