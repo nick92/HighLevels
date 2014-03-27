@@ -3,23 +3,33 @@
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
+		<link rel="stylesheet" type="text/css" href="style.css"> 
+		<link href='http://fonts.googleapis.com/css?family=Poiret+One' rel='stylesheet' type='text/css'>
 		<title>Please login to this beautiful site!</title>
 	</head>
 	<body>
-		<form name="log_in" action="functions.php" method="post">
-			Username: <input type="text" name="user">
-			Password: <input type="password" name="pass">
-			<input type="hidden" name="data" value="0" >
-			<input type="submit" value="Submit">
-		</form> 
-		<form name="register" action="functions.php" method="post">
-			Username: <input type="text" name="user" id="user">
-			Password: <input type="password" name="pass" id="pass">
-			Location: <input type="text" value="" id="loc">
-			<input type="hidden" name="data" value="1" id="data">
-			<input type="hidden" name="location" value="1" id="longlat">
-			<input type="submit" value="Submit">
-		</form>
+		<p id="hl">High Levels</a>
+		<h4 id="title" style="margin-left: 80px">The home of river levels in the UK</h4> 	
+		<div id="login"><h4 id="title" style="margin-bottom: 30px;">Login</h4>
+			<form name="log_in" action="functions.php" method="post">
+				<p>Username: </p><input type="text" name="user">
+				<p>Password: </p><input type="password" name="pass">
+				<br />
+				<input type="hidden" name="data" value="0" >
+				<input type="submit" value="Submit" style="float:right">
+			</form> 
+		</div>
+		<div id="register"><h4 id="title" style="margin-bottom:30px;">Register</h4>
+			<form name="register" action="functions.php" method="post">
+				<p>Username:</p> <input type="text" name="user">
+				<p>Password:</p> <input type="password" name="pass">
+				<p>Location:</p> <input type="text" value="">
+				<br />
+				<input type="hidden" name="data" value="1" id="data">
+				<input type="hidden" name="location" value="1" id="longlat">
+				<input type="submit" value="Submit" style="float:right">
+			</form>
+		</div>
 		<script>
 			if ("geolocation" in navigator) {
 			navigator.geolocation.getCurrentPosition(function(position) {

@@ -1,6 +1,7 @@
 <?php
 	
 	$data = $_POST['data'];
+	$user = $_COOKIE['user'];
 	
 	$mysql = mysql_connect('localhost', 'root', 'hydref');
 	if (!$mysql) 
@@ -9,7 +10,7 @@
 	}
 	
 	$selected = mysql_select_db("highlevels",$mysql) or die("Could not select examples");
-	$favrivers = explode(",",mysql_fetch_array(mysql_query("select rivers from users where name = 'nick'"))[0]);
+	$favrivers = explode(",",mysql_fetch_array(mysql_query("select rivers from users where name = '$user'"))[0]);
 	$river = mysql_query("select stationID from rivers");
 	
 	while($row = mysql_fetch_array($river))
@@ -66,11 +67,13 @@
 	function get_json()
 	{
 		//Connect to DB to get user location
-		$userQu = mysql_query("select location from users where name = 'nick'");	
+		$user = $GLOBALS['user'];
+		$userQu = mysql_query("select location from users where name = '$user'");	
 		$jsonArr = [];
 		$myArr = [];
 		$userLoc = mysql_fetch_array($userQu);
 		$rivers = $GLOBALS['rivers'];
+		$favrivers = $GLOBALS['favrivers'];
 		$level = get_river_level();
 		$addedRiv = '';
 		$i = 0;
@@ -86,13 +89,23 @@
 			$addedRiv .=  $rivArray[0] . "|";
 			array_push($myArr, $riverData[0]);
 			array_push($myArr, $level[$i++]);
+			
+			//if in array add to favourties
+			if(in_array($river, $favrivers))
+			{
+				array_push($myArr, "1");
+			}
+			else
+			{
+				array_push($myArr, "0");
+			}
 		}
 		
 		//request data from google api
 		$request = "http://maps.googleapis.com/maps/api/distancematrix/json?origins=$userLoc[0]&destinations=$addedRiv&sensor=false";
 		$scrapped_data = curl($request);
 		$json_data = json_decode($scrapped_data);
-
+		
 		foreach($json_data->rows as $rows)
 		{
 			foreach($rows->elements as $data)
@@ -102,7 +115,7 @@
 				$riverJson['name'] = $myArr[$j++];
 				$riverJson['level'] = $myArr[$j++];
 				$riverJson['distance'] = $distance;
-				$riverJson['fav'] = '0';
+				$riverJson['fav'] = $myArr[$j++];
 				
 				array_push($jsonArr, $riverJson);
 				

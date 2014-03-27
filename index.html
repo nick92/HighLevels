@@ -7,9 +7,26 @@
 		<title>High Levels - The home of river levels in the UK</title>
 	</head>
 	<body onload="run()">
-		<h1 id="hl">High Levels</h1>
-		<h3 id="title">The home of river levels in the UK</h3> 			
+		<a href="index.html" id="hl">High Levels</a>
+		<h4 id="title" style="margin-left: 80px">The home of river levels in the UK</h4> 			
 		<p id="user"></p>
+		<div id="lvlDetails">
+			<p id="nearYou" class="riverLevels">River Levels Near You</p>
+			<div id="favwrap">
+				<div id="neariv" class="favriv">
+				
+				</div>
+			</div>
+			<div id="arrowL"><img src="images/arrowL.png" /></div>
+			<div id="arrowR"><img src="images/arrowR.png" /></div>
+			<p id="favorite" class="riverLevels" style="margin-top:80px;">Favorite Rivers</p>
+			<div id="favwrap">
+				<div id="favourites" class="favriv">
+				
+				</div>
+			</div>
+		</div>
+		<div id="update">Your location has changed.. <p id='updatey'>Update</p>?</div>
 		<div id="weather-box">
 			<div id="icon"></div>
 			<div id="location"></div>
@@ -17,18 +34,15 @@
 			<div id="hourly"></div>
 			<div id="time"></div>
 			<div id="daily"></div>
+			<div id="arrow"><img src="images/arrow.png" width="15px"/></div>
 		</div>
-		<h3 id="nearYou" class="riverLevels">River Levels Near You</h3>
-		<div id="favriv">
+		<div id="future-weather">
 			
 		</div>
-		<h3 id="favorite" class="riverLevels" style="margin-top:80px;">Favorite Rivers</h3>
-		<div id="favriv">
-			
-		</div>
-		
+		<div id="arrowFL"><img src="images/arrowL.png" /></div>
+		<div id="arrowFR"><img src="images/arrowR.png" /></div>
 		<div id="search-gr">
-			<form action="" id="search-form">
+			<form action="rivers.php" id="search-form">
 				<fieldset>
 					<input type="search" id="search" name="search" />
 					<input type="submit" id="search-submit" value="Sub" />
@@ -38,13 +52,77 @@
 				
 			</table>
 		</div>
-		
-		
-		
 		<script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
 		<script src="riverinfo.js"></script>
 		<script>
 			$(document).ready(function(){ 
+				
+				$('#updatey').click(function(){
+					update_location();
+				});
+				
+				var width = $('#favwrap').width();
+				
+				$('.water-drop').on("hover", function(){
+					console.log("lol");
+					//$('.water-drop').css("display", "none");
+				});
+				
+				$('#arrowR').css("left", width + 70);
+				$('#arrowFR').css("left", width + 70);
+				$('#arrowL').click(function(){
+					$('#neariv').animate({
+						left: "+=300px"
+					},800);
+				});
+				
+				$('#arrowR').click(function(){
+					$('#neariv').animate({
+						left: "-=300px"
+					},800);
+				});
+				$('#arrowFL').click(function(){
+					$('#favriv').animate({
+						left: "+=300px"
+					},800);
+				});
+				
+				$('#arrowFR').click(function(){
+					$('#favriv').animate({
+						left: "-=300px"
+					},800);
+				});
+				
+				$('#arrow').click(function(){
+					var height = $('#future-weather').height();
+					
+					if(height == 0)
+					{
+						$('#future-weather').animate({
+							height: "120px"
+						},500);
+						$('#lvlDetails').animate({
+							top: "+=100px"
+						},500);
+						$('#future-weather').show();
+					}
+					else
+					{
+						$('#future-weather').animate({
+							height: "0px"
+						},500, function()
+						{
+							setTimeout(function(){
+									$('#future-weather').toggle()
+								}, 5);
+						});
+						$('#lvlDetails').animate({
+							top: "-=100px"
+						},500);
+					}
+						
+				});
+				
 				var rivArr;
 				// Add the value of "Search..." to the input field and a class of .empty
 				$("#search").val("Search...").addClass("empty");
@@ -52,6 +130,7 @@
 				$.post("functions.php", {data:4}, function(data)
 				{
 					rivArr = data.split(",");
+					rivArr.pop();
 				});
 				
 				// When you click on #search
@@ -61,39 +140,32 @@
 					//search for river names based on key
 					$("#search").keypress(function(data){
 						var key = data.key;
-						var river = rivArr[0];
-						
+						var newRiv;						
+						$(rivArr).each(function(index){
+							var river = rivArr[index];
+							
+							if(river !== undefined)
+							{
+								if(key == river[i].toLowerCase())
+								{
+									newRiv = rivArr.splice(index, 1);
+								}
+							}
+						});
 						if(key == "Backspace")
 						{
-							if(i >= 0)
+							if(i > 0)
 							{
 								i--;
+								newRiv = rivArr;
 							}
 						}
 						else
 						{
 							i++;
 						}
-						
-						$(rivArr).each(function(index){
-							var river = rivArr[index];
-							var reg = new RegExp(key);
-							
-							if(river !== undefined)
-							{
-								var test = reg.test();
-								console.log(test);
-								console.log(rivArr);
-								console.log(i);
-								/*
-								if(key !== river[i])
-								{
-									rivArr.splice(index, 1);
-								}*/
-							}
-						
-						});
-						
+						console.log(newRiv);
+						console.log(i);
 					});
 					// If the value is equal to "Search..."
 					if($(this).val() == "Search...") {
