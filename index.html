@@ -11,10 +11,11 @@
 		<h4 id="title" style="margin-left: 80px">The home of river levels in the UK</h4> 			
 		<p id="user"></p>
 		<div id="lvlDetails">
-			<p id="nearYou" class="riverLevels">River Levels Near You</p>
+			<p id="nearYou" class="riverLevels">River Levels</p>
+			<div id="filter"> Sort by: <a id='near' style='font-size: 10px;'>Nearest</a> | <a id='high' style='font-size: 10px;'>Highest</a></div>
 			<div id="favwrap">
 				<div id="neariv" class="favriv">
-				
+					
 				</div>
 			</div>
 			<div id="arrowL"><img src="images/arrowL.png" /></div>
@@ -34,6 +35,8 @@
 			<div id="hourly"></div>
 			<div id="time"></div>
 			<div id="daily"></div>
+			<div id="refresh"><img src="images/refresh.png" width="12px"/></div>
+			<div id="updated">updated 20 mins ago</div>
 			<div id="arrow"><img src="images/arrow.png" width="15px"/></div>
 		</div>
 		<div id="future-weather">
@@ -63,33 +66,28 @@
 				
 				var width = $('#favwrap').width();
 				
-				$('.water-drop').on("hover", function(){
-					console.log("lol");
-					//$('.water-drop').css("display", "none");
-				});
-				
 				$('#arrowR').css("left", width + 70);
 				$('#arrowFR').css("left", width + 70);
 				$('#arrowL').click(function(){
 					$('#neariv').animate({
-						left: "+=300px"
+						left: "5px"
 					},800);
 				});
 				
 				$('#arrowR').click(function(){
 					$('#neariv').animate({
-						left: "-=300px"
+						left: "-=400px"
 					},800);
 				});
 				$('#arrowFL').click(function(){
-					$('#favriv').animate({
-						left: "+=300px"
+					$('.favriv').animate({
+						left: "5px"
 					},800);
 				});
 				
 				$('#arrowFR').click(function(){
-					$('#favriv').animate({
-						left: "-=300px"
+					$('.favriv').animate({
+						left: "-=400px"
 					},800);
 				});
 				

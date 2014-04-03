@@ -5,7 +5,7 @@
 		<link rel="stylesheet" type="text/css" href="style.css"> 
 		<link href='http://fonts.googleapis.com/css?family=Poiret+One' rel='stylesheet' type='text/css'>o
 		<script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
-		<title>River information on a page</title>
+		<title>High Levels - The home of river levels in the UK</title>
 	</head>
 	<body>
 		<a href="index.html" id="hl">High Levels</a>
@@ -59,7 +59,7 @@
 					while($row = mysql_fetch_array($riverInfo))
 					{
 						echo "<div id='content'>";
-						echo "<p id='grade'>Grade: $row[2]</p>";
+						echo "<p id='grade' class='rText'>Grade: $row[2]</p>";
 						echo "<p id='rInfo'>River info: $row[3]</p>";
 					}
 				}
@@ -94,7 +94,6 @@
 				
 				$("#box"+index).css("height", height);
 			});
-			get_weather_json();
 		</script>
 		
 	</body>

@@ -1,6 +1,6 @@
 <?php
 	
-	$data = $_POST['data'];
+	$data = $_GET['data'];
 	$user = $_COOKIE['user'];
 	
 	$mysql = mysql_connect('localhost', 'root', 'hydref');
@@ -105,21 +105,42 @@
 		$request = "http://maps.googleapis.com/maps/api/distancematrix/json?origins=$userLoc[0]&destinations=$addedRiv&sensor=false";
 		$scrapped_data = curl($request);
 		$json_data = json_decode($scrapped_data);
+		$disArry = [];
 		
 		foreach($json_data->rows as $rows)
 		{
 			foreach($rows->elements as $data)
 			{
 				$distance = $data->distance->text;
-				
+				$data = $_GET['type'];
 				$riverJson['name'] = $myArr[$j++];
 				$riverJson['level'] = $myArr[$j++];
+				
+				switch($data)
+				{
+					case '0':
+						$disArry[$riverJson['name']] = intval($distance);
+						break;
+					case '1':
+						$disArry[$riverJson['name']] = floatval($riverJson['level']);
+						break;
+				}
+				
 				$riverJson['distance'] = $distance;
 				$riverJson['fav'] = $myArr[$j++];
 				
 				array_push($jsonArr, $riverJson);
-				
 			}
+		}
+		
+		switch($data)
+		{
+			case '0':
+				array_multisort($disArry, SORT_ASC, $jsonArr);
+				break;
+			case '1':
+				array_multisort($disArry, SORT_DESC, $jsonArr);
+				break;
 		}
 		echo json_encode($jsonArr);
 	}

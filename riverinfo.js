@@ -5,17 +5,30 @@ var d = document.getElementById("daily");
 var icon = document.getElementById("icon");
 var time = document.getElementById("time");
 var fWeather = document.getElementById("future-weather");
-var longi, lat;
+var longi, lat, filter;
 
 function run()
 {
 	getUserInfo();
 	getRiverInfo();
+	get_updated_time();
 	future_weather();		
 	getWeatherInfo();	
 	get_location(longi, lat);	
 }		
 
+function get_updated_time()
+{
+	var timeNow = new Date().getTime();
+	var weatherTime;
+	
+	$.get("weather/weather.json?nocache="+Math.random(), function(data)
+	{
+		weatherTime = data.currently.time;
+		var diff = (timeNow - weatherTime);
+		console.log(diff);
+	});
+}
 function getUserInfo()
 {
 	//Gather cookie inforation and then break it into array
@@ -54,10 +67,52 @@ function get_local_weather(riv)
 {
 	$.post("functions.php", {data: 6, riv: riv}, function(data)
 	{
-		$.post("getWeather.php", {check:'false', lonlat: data}, function(data){});
+		$.post("getWeather.php", {check:'false', lonlat: data}, function(data){
+			$.get("weather/weather.json?nocache="+Math.random(), function(data)
+			{
+				//Current Weather Info
+				w.innerHTML = "Weather: " + data.currently.summary;
+				f.innerHTML = "Temp: "+data.currently.temperature.toFixed(0) +"<p style='font-size: 10px; display:inline;'>&deg;C</p>";
+				d.innerHTML = "Percip: " + data.currently.precipIntensity.toFixed(2)+"<p style='font-size: 10px; display:inline;'> mm/hr </p>";
+				wicon = data.currently.icon;
+				
+				switch(wicon)
+				{
+					case 'wind':
+						icon.innerHTML = "<img src='icon/sun.rays.cloud.png' />";
+						break;
+					case 'rain':
+						icon.innerHTML = "<img src='icon/cloud.drizzle.png' />";
+						break;
+					case 'sunny':
+						icon.innerHTML = "<img src='icon/sun.rays.small.png' />";
+						break;
+					case 'partly-cloudy-day':
+						icon.innerHTML = "<img src='icon/cloud.png' />";
+						break;
+				}
+			});
+		});
 	});
 }
+$('#refresh').click(function(){
+	$.post("getWeather.php", {check:'false', lonlat: lat + "," + longi}, function(data){
+			get_weather_json();	
+	});
+});
 
+$('#near').click(function(){
+	var id = $( this ).attr('id');
+	$('#neariv').html("");
+	$('#favourites').html("");
+	getRiverInfo(0);
+});
+$('#high').click(function(){
+	var id = $( this ).attr('id');
+	$('#neariv').html("");
+	$('#favourites').html("");
+	getRiverInfo(1);
+});						
 function update_location()
 {
 	var clat;
@@ -120,6 +175,9 @@ function future_weather()
 					case 'partly-cloudy-day':
 						ficon.innerHTML = "<img src='icon/cloud.png' class='fwi' width='25px'/>";
 						break;
+					case 'cloudy':
+						ficon.innerHTML = "<img src='icon/cloud.png' class='fwi' width='25px'/>";
+						break;
 				}
 				
 				weather.innerHTML = "Weather: " + data.daily.data[i].icon;
@@ -157,6 +215,9 @@ function get_weather_json()
 			case 'partly-cloudy-day':
 				icon.innerHTML = "<img src='icon/cloud.png' />";
 				break;
+			case 'cloudy':
+				icon.innerHTML = "<img src='icon/cloud.png' />";
+				break;
 		}
 		$.post("getWeather.php", {check:'true', lonlat: lat + "," + longi}, function(data){});
 		
@@ -188,21 +249,21 @@ function get_location(longi, lat)
 	});
 }
 
-function getRiverInfo()
+function getRiverInfo(filter)
 {
 	var fl = 5;
 	var nl = 5;
 	//-----------------Get River Info!!-----------------
-	$.getJSON("river.php", function(data)
+	$.getJSON("river.php", {type: filter}, function(data)
 	{
 		$(data).each(function(index){
 			
 			if(data[index].fav == "1")
 			{
 				$( "#favourites" ).append( "<div class='rivBox' id='"+index+"'></div>" );
-				$("#"+index).append("<div id='drop"+index+"' class='water-drop'></div><div id='rLine'></div><div class='rBox' id='box"+index+"'></div><div class='bText' id='rName"+index+"'></div><div class='bText' id='rLevel"+index+"'></div><div class='bText' id='rDist"+index+"'></div>");	
+				$("#"+index).append("<div id='drop"+index+"' attr='"+data[index].name+"' class='water-drop'></div><div id='rLine'></div><div class='rBox' id='box"+index+"'></div><div class='bText' id='rName"+index+"'></div><div class='bText' id='rLevel"+index+"'></div><div class='bText' id='rDist"+index+"'></div>");	
 				var drop = document.getElementById("drop"+index);
-				drop.innerHTML = "<img src='images/water-drop-full.png' />";
+				drop.innerHTML = "<img src='images/water-drop-full.png' attr='1' id='water-droplet"+index+"'/>";
 				$("#"+index).css("left", fl+"px");
 				fl = fl + 180;
 				if(fl > 1000)
@@ -214,9 +275,9 @@ function getRiverInfo()
 			else
 			{
 				$( "#neariv" ).append( "<div class='rivBox' id='"+index+"'></div>" );
-				$("#"+index).append("<div id='drop"+index+"' class='water-drop'></div><div id='rLine'></div><div class='rBox' id='box"+index+"'></div><div class='bText' id='rName"+index+"'></div><div class='bText' id='rLevel"+index+"'></div><div class='bText' id='rDist"+index+"'></div>");	
+				$("#"+index).append("<div id='drop"+index+"' attr='"+data[index].name+"' class='water-drop'></div><div id='rLine'></div><div class='rBox' id='box"+index+"'></div><div class='bText' id='rName"+index+"'></div><div class='bText' id='rLevel"+index+"'></div><div class='bText' id='rDist"+index+"'></div>");	
 				var drop = document.getElementById("drop"+index);
-				drop.innerHTML = "<img src='images/water-drop-empty.png' id='water-droplet"+index+"'/>";
+				drop.innerHTML = "<img src='images/water-drop-empty.png' attr='0' id='water-droplet"+index+"'/>";
 				$("#"+index).css("left", nl+"px");
 				nl = nl + 180;
 				if(nl > 1000)
@@ -225,6 +286,34 @@ function getRiverInfo()
 					$('#arrowR').show();
 				}
 			}		
+			
+			$(".water-drop").mouseenter(function(){
+					var attr = $(this).find('img').attr('attr');
+					var id = $(this).find('img').attr('id');
+					if(attr == 0)
+					{
+						$('#'+id).attr('src','images/water-drop-full.png');
+					}
+					else
+					{
+						$('#'+id).attr('src','images/water-drop-empty.png');
+					}
+					console.log("enter");
+				});
+			$('.water-drop').mouseleave(function(){
+					var id = $(this).find('img').attr('id');
+					var attr = $(this).find('img').attr('attr');
+					
+					if(attr == 0)
+					{
+						$('#'+id).attr('src','images/water-drop-empty.png');
+					}
+					else
+					{
+						$('#'+id).attr('src','images/water-drop-full.png');
+					}
+					console.log("leave");
+			});
 			
 			var name = document.getElementById("rName"+index);
 			var level = document.getElementById("rLevel"+index);
@@ -237,6 +326,21 @@ function getRiverInfo()
 			
 			$("#box"+index).css("height", height);
 		});
-	});
+		
+		$('.water-drop').bind('click', function(){
+			var	id = $(this).attr('attr');
+			var attr = $(this).find('img').attr('attr');
+			console.log(id);
+			if(attr == 0)
+			{
+				$.post('functions.php', {data: 7, riv: id}, function(data){console.log(data)});
+			}
+			else
+			{
+				$.post('functions.php', {data: 8, riv: id}, function(data){console.log(data)});
+			}
+			location.reload(); 
+		});
+	});		
 }	
 				

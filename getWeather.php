@@ -50,7 +50,6 @@ if($check == 'true')
 }
 else
 {
-	echo 'saved';
 	$data = curl("https://api.forecast.io/forecast/06446ae7099feacb17ffef78fdf89f0a/$longlat?units=si");
 	create_json($location, $data);
 }

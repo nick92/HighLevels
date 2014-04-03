@@ -38,6 +38,12 @@ switch ($data)
 	case 6:
 		get_river_loc($riv);
 		break;
+	case 7:
+		update_fav($riv);
+		break;
+	case 8:
+		remove_fav($riv);
+		break;
 }
 				
 function log_in($user, $pass)
@@ -59,6 +65,38 @@ function log_in($user, $pass)
 			Exit;
 		}
 	}	
+}
+
+function update_fav($riv)
+{
+	$user = $_COOKIE['user'];
+	$update = mysql_fetch_array(mysql_query("select rivers from users where name='$user'"));
+	
+	$river = mysql_fetch_array(mysql_query("select stationID from rivers where name='$riv'"));
+	if(!empty($update[0]))
+	{
+		$string = $update[0] . "," . $river[0];
+	}
+	else
+	{
+		$string = $river[0];
+	}	
+	$query = mysql_query("update users set rivers = '$string' where name = '$user'");
+	echo $update[0];
+}
+
+function remove_fav($riv)
+{
+	$user = $_COOKIE['user'];
+	$update = mysql_fetch_array(mysql_query("select rivers from users where name='$user'"));
+	
+	$river = mysql_fetch_array(mysql_query("select stationID from rivers where name='$riv'"));
+	$string = explode(",", $update[0]);
+	$i = array_search($river[0], $string);
+	unset($string[$i]);
+	
+	$rivers = implode(",", $string);
+	$query = mysql_query("update users set rivers = '$rivers' where name = '$user'");
 }
 
 function get_river_loc($user)
