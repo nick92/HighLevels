@@ -69,34 +69,16 @@ function log_in($user, $pass)
 
 function update_fav($riv)
 {
-	$user = $_COOKIE['user'];
-	$update = mysql_fetch_array(mysql_query("select rivers from users where name='$user'"));
-	
+	$user = $_COOKIE['user'];	
 	$river = mysql_fetch_array(mysql_query("select stationID from rivers where name='$riv'"));
-	if(!empty($update[0]))
-	{
-		$string = $update[0] . "," . $river[0];
-	}
-	else
-	{
-		$string = $river[0];
-	}	
-	$query = mysql_query("update users set rivers = '$string' where name = '$user'");
-	echo $update[0];
+	$query = mysql_query("INSERT INTO `userRivers` (`user_name`, `river_id`) values ('$user', '$river[0]')");
 }
 
 function remove_fav($riv)
 {
-	$user = $_COOKIE['user'];
-	$update = mysql_fetch_array(mysql_query("select rivers from users where name='$user'"));
-	
+	$user = $_COOKIE['user'];	
 	$river = mysql_fetch_array(mysql_query("select stationID from rivers where name='$riv'"));
-	$string = explode(",", $update[0]);
-	$i = array_search($river[0], $string);
-	unset($string[$i]);
-	
-	$rivers = implode(",", $string);
-	$query = mysql_query("update users set rivers = '$rivers' where name = '$user'");
+	$query = mysql_query("delete from userRivers where user_name='$user' and river_id = '$river[0]'");
 }
 
 function get_river_loc($user)

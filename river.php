@@ -10,14 +10,18 @@
 	}
 	
 	$selected = mysql_select_db("highlevels",$mysql) or die("Could not select examples");
-	$favrivers = explode(",",mysql_fetch_array(mysql_query("select rivers from users where name = '$user'"))[0]);
+	$favriversquery = mysql_query("select river_id from userRivers where user_name = '$user'");
 	$river = mysql_query("select stationID from rivers");
 	
 	while($row = mysql_fetch_array($river))
 	{
 		$rivers[] = $row[0];
 	}	
-
+	
+	while($fav = mysql_fetch_array($favriversquery))
+	{
+		$favrivers[] = $fav[0];
+	}	
 	get_json();
 	
 	function get_river_level()

@@ -40,6 +40,8 @@ function getUserInfo()
 		});
 	lat = cooke[1].substr(9).split("%2C")[0];
 	longi = cooke[1].substr(9).split("%2C")[1];
+	
+	return lat+","+longi;
 }
 function getWeatherInfo()
 {
@@ -88,6 +90,9 @@ function get_local_weather(riv)
 						icon.innerHTML = "<img src='icon/sun.rays.small.png' />";
 						break;
 					case 'partly-cloudy-day':
+						icon.innerHTML = "<img src='icon/cloud.png' />";
+						break;
+					case 'cloudy':
 						icon.innerHTML = "<img src='icon/cloud.png' />";
 						break;
 				}
@@ -217,6 +222,9 @@ function get_weather_json()
 				break;
 			case 'cloudy':
 				icon.innerHTML = "<img src='icon/cloud.png' />";
+				break;
+			case 'clear':
+				icon.innerHTML = "<img src='icon/sun.rays.small.png' />";
 				break;
 		}
 		$.post("getWeather.php", {check:'true', lonlat: lat + "," + longi}, function(data){});

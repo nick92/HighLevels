@@ -37,6 +37,11 @@
 				
 			</table>
 		</div>
+		
+		<script type="text/javascript"
+			src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAo9AJzvnqD2HNX3VkM7spK8JN1F3YEs6Y&sensor=false">
+		</script>
+		
 		<script src="riverinfo.js"></script>
 			<?php 
 				$river = $_GET['search'];
@@ -57,7 +62,7 @@
 					$riverInfo = mysql_query("select * from riverinfo where name='$river'");	
 					
 					while($row = mysql_fetch_array($riverInfo))
-					{
+					{							
 						echo "<div id='content'>";
 						echo "<p id='grade' class='rText'>Grade: $row[2]</p>";
 						echo "<p id='rInfo'>River info: $row[3]</p>";
@@ -65,10 +70,81 @@
 				}
 			?>
 		</div>
+			<html>
+				<head>
+					<style>
+						html, body, #map-canvas {
+							clear: both;
+							height: 300px;
+							float: right;
+							right: 135px;
+							padding: 0;
+							top: 166px;
+						} 
+					</style>
+				</head>
+				<body>
+					<div id="map-canvas">
+					</div>
+				</body>
+			</html>
+		
 		<script>
+			var directionsDisplay;
+			var rivLocation;
+			var lon, lat;
+			var usrlon, usrlat;
+			var directionsService = new google.maps.DirectionsService();
 			var riv = $('#rTitle').html();
+			
+			var usrLocation = getUserInfo();
+			
+			usrlon = usrLocation.split(",")[0];
+			usrlat = usrLocation.split(",")[1];
+				
+			$.post("functions.php", {data: 6, riv: riv}, function(data)
+			{
+				rivLocation = data;
+				lon = rivLocation.split(",")[0];
+				lat = rivLocation.split(",")[1];
+				console.log(rivLocation);
+			});
+			
+			
+			function initialize() {
+				var position = new google.maps.LatLng(usrlon,usrlat);
+				directionsDisplay = new google.maps.DirectionsRenderer();
+
+				var mapOptions = {
+				  center: position,
+				  zoom: 9
+				};
+				
+				var map = new google.maps.Map(document.getElementById("map-canvas"), mapOptions);
+				
+				directionsDisplay.setMap(map);
+				calcRoute();
+			}
+			
+			
+			function calcRoute() {
+			  var start = new google.maps.LatLng(usrlon,usrlat);
+			  var end = new google.maps.LatLng(lon,lat);
+			  var request = {
+				  origin:start,
+				  destination:end,
+				  travelMode: google.maps.TravelMode.DRIVING
+			  };
+			  directionsService.route(request, function(response, status) {
+				if (status == google.maps.DirectionsStatus.OK) {
+				  directionsDisplay.setDirections(response);
+				}
+			  });
+			}
+			
 			$('#rImage').append("<img src='images/"+riv+".jpg' width='400px'/>");
 			get_local_weather(riv);
+			
 			$.getJSON("river.php", function(data)
 			{	
 				var river;
@@ -94,6 +170,8 @@
 				
 				$("#box"+index).css("height", height);
 			});
+			
+			google.maps.event.addDomListener(window, 'load', initialize);
 		</script>
 		
 	</body>

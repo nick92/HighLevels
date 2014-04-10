@@ -15,7 +15,7 @@
 		switch($data)
 		{
 			case 0:
-				$input = mysql_query("insert into rivers (name, stationID, town, longlat) values ('$name','$stationID','$town','$longlat')") or die ("Couldn't do it".mysql_error());
+				$input = mysql_query("insert into rivers (name, stationID, town, longlat) values ('$name','$town','$longlat')") or die ("Couldn't do it".mysql_error());
 				break;
 			case 1:
 				$input = mysql_query("insert into riverinfo (name, date, grade, info) values ('$name','$date','$grade','$info')") or die ("Couldn't do it".mysql_error());
