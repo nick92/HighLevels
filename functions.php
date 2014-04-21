@@ -48,6 +48,8 @@ switch ($data)
 				
 function log_in($user, $pass)
 {
+	$pass = md5($pass, false);
+	
 	$userInfo = mysql_query("select * from users where name = '$user'");
 	
 	while($row = mysql_fetch_array($userInfo))
@@ -60,7 +62,6 @@ function log_in($user, $pass)
 		{
 			setcookie("user", $user, time()+60*60*24*30);
 			setcookie("longlat", $row[3], time()+60*60*24*30);
-			echo "Logged in!";
 			header("Location: index.html");
 			Exit;
 		}
@@ -117,6 +118,7 @@ function get_rivers()
 	
 function create_user($userID, $pass, $location)
 {	
+	$pass = md5($pass, false);
 	$createUser = mysql_query("insert into users (name, password, rivers, location) values ('$userID', '$pass', null, '$location')") or die("Couldn't submit");
 	setcookie("user", $userID, time()+60*60*24*30);
 	setcookie("longlat", $location, time()+60*60*24*30);

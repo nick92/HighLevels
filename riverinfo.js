@@ -84,16 +84,34 @@ function get_local_weather(riv)
 						icon.innerHTML = "<img src='icon/sun.rays.cloud.png' />";
 						break;
 					case 'rain':
-						icon.innerHTML = "<img src='icon/cloud.drizzle.png' />";
+						icon.innerHTML = "<img src='icon/cloud.rain.png' />";
 						break;
 					case 'sunny':
 						icon.innerHTML = "<img src='icon/sun.rays.small.png' />";
 						break;
 					case 'partly-cloudy-day':
-						icon.innerHTML = "<img src='icon/cloud.png' />";
+						icon.innerHTML = "<img src='icon/sun.rays.cloud.png' />";
+						break;
+					case 'partly-cloudy-night':
+						icon.innerHTML = "<img src='icon/cloud.dark.png' />";
 						break;
 					case 'cloudy':
 						icon.innerHTML = "<img src='icon/cloud.png' />";
+						break;
+					case 'clear':
+						icon.innerHTML = "<img src='icon/sun.rays.small.png' />";
+						break;
+					case 'clear-day':
+						icon.innerHTML = "<img src='icon/sun.rays.small.png' />";
+						break;
+					case 'clear-night':
+						icon.innerHTML = "<img src='icon/sun.big.png' />";
+						break;
+					case 'snow':
+						icon.innerHTML = "<img src='icon/cloud.snow.png' />";
+						break;
+					case 'sleet':
+						icon.innerHTML = "<img src='icon/cloud.snow.png' />";
 						break;
 				}
 			});
@@ -169,19 +187,34 @@ function future_weather()
 				switch(wicon)
 				{
 					case 'wind':
-						ficon.innerHTML = "<img src='icon/sun.rays.cloud.png' class='fwi' width='25px'/>";
+						ficon.innerHTML = "<img src='icon/sun.rays.cloud.png'  class='fwi' width='25px'/>";
 						break;
 					case 'rain':
-						ficon.innerHTML = "<img src='icon/cloud.drizzle.png' class='fwi' width='25px'/>";
+						ficon.innerHTML = "<img src='icon/cloud.rain.png' class='fwi' width='25px'/>";
 						break;
 					case 'sunny':
 						ficon.innerHTML = "<img src='icon/sun.rays.small.png' class='fwi' width='25px'/>";
 						break;
 					case 'partly-cloudy-day':
-						ficon.innerHTML = "<img src='icon/cloud.png' class='fwi' width='25px'/>";
+						ficon.innerHTML = "<img src='icon/sun.rays.cloud.png' class='fwi' width='25px'/>";
+						break;
+					case 'partly-cloudy-night':
+						ficon.innerHTML = "<img src='icon/cloud.dark.png' class='fwi' width='25px'/>";
 						break;
 					case 'cloudy':
 						ficon.innerHTML = "<img src='icon/cloud.png' class='fwi' width='25px'/>";
+						break;
+					case 'clear-day':
+						ficon.innerHTML = "<img src='icon/sun.rays.small.png' class='fwi' width='25px' />";
+						break;
+					case 'clear-night':
+						ficon.innerHTML = "<img src='icon/sun.big.png' class='fwi' width='25px' />";
+						break;
+					case 'snow':
+						ficon.innerHTML = "<img src='icon/cloud.snow.png' class='fwi' width='25px' />";
+						break;
+					case 'sleet':
+						ficon.innerHTML = "<img src='icon/cloud.snow.png' class='fwi' width='25px' />";
 						break;
 				}
 				
@@ -212,19 +245,34 @@ function get_weather_json()
 				icon.innerHTML = "<img src='icon/sun.rays.cloud.png' />";
 				break;
 			case 'rain':
-				icon.innerHTML = "<img src='icon/cloud.drizzle.png' />";
+				icon.innerHTML = "<img src='icon/cloud.rain.png' />";
 				break;
 			case 'sunny':
 				icon.innerHTML = "<img src='icon/sun.rays.small.png' />";
 				break;
 			case 'partly-cloudy-day':
-				icon.innerHTML = "<img src='icon/cloud.png' />";
+				icon.innerHTML = "<img src='icon/sun.rays.cloud.png' />";
+				break;
+			case 'partly-cloudy-night':
+				icon.innerHTML = "<img src='icon/cloud.dark.png' />";
 				break;
 			case 'cloudy':
 				icon.innerHTML = "<img src='icon/cloud.png' />";
 				break;
 			case 'clear':
 				icon.innerHTML = "<img src='icon/sun.rays.small.png' />";
+				break;
+			case 'clear-day':
+				icon.innerHTML = "<img src='icon/sun.rays.small.png' />";
+				break;
+			case 'clear-night':
+				icon.innerHTML = "<img src='icon/sun.big.png' />";
+				break;
+			case 'snow':
+				icon.innerHTML = "<img src='icon/cloud.snow.png' />";
+				break;
+			case 'sleet':
+				icon.innerHTML = "<img src='icon/cloud.snow.png' />";
 				break;
 		}
 		$.post("getWeather.php", {check:'true', lonlat: lat + "," + longi}, function(data){});

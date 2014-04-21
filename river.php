@@ -110,9 +110,10 @@
 		$scrapped_data = curl($request);
 		$json_data = json_decode($scrapped_data);
 		$disArry = [];
-		
+		$riverJson['time'] = time();
 		foreach($json_data->rows as $rows)
 		{
+			
 			foreach($rows->elements as $data)
 			{
 				$distance = $data->distance->text;
@@ -146,6 +147,7 @@
 				array_multisort($disArry, SORT_DESC, $jsonArr);
 				break;
 		}
+		file_put_contents("weather/rivers.json", json_encode($jsonArr));
 		echo json_encode($jsonArr);
 	}
 	mysql_close($mysql);

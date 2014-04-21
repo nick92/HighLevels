@@ -3,7 +3,7 @@
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<link rel="stylesheet" type="text/css" href="style.css"> 
-		<link href='http://fonts.googleapis.com/css?family=Poiret+One' rel='stylesheet' type='text/css'>o
+		<link href='http://fonts.googleapis.com/css?family=Poiret+One' rel='stylesheet' type='text/css'>
 		<script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
 		<title>High Levels - The home of river levels in the UK</title>
 	</head>
@@ -73,13 +73,14 @@
 			<html>
 				<head>
 					<style>
-						html, body, #map-canvas {
+						#map-canvas {
 							clear: both;
-							height: 300px;
 							float: right;
-							right: 135px;
+							height: 300px;
 							padding: 0;
+							right: 135px;
 							top: 166px;
+							width: 20%;
 						} 
 					</style>
 				</head>
